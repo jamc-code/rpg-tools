@@ -8,18 +8,18 @@ from faker_starship import Provider as StarshipProvider
 from random import choice, randint
 
 # TODO immersive ship size names in another file and import them
-# TODO break these into lists within lists for military and civilian
+# TODO break these into lists within lists for military and civilian, add args
 small_ships = ["cutter", "patrol boat", "yacht", "smuggler"]
 medium_ships = ["destroyer", "frigate", "passenger liner", "corvette"]
 large_ships = ["carrier", "battleship", "hospital ship", "freighter"]
 
 
-def gen_names(title: str):
+def gen_names(size: str):
     """decide if ship gets a pilot or a captain and first mate"""
-    if title == "medium":
+    if size == "medium":
         pilot = "Pilot"
         assistant = "Co-Pilot"
-    elif title == "large":
+    elif size == "large":
         pilot = "Captain"
         assistant = "First Mate"
     else:
@@ -36,17 +36,18 @@ def gen_names(title: str):
         print(f"- {pilot}: {fake.name()}\n")
 
 
-def gen_starship(size: str):
+def gen_starship(size: str, availability=None):
     """generate a starship name, class and registry"""
     name = fake.starship_name()
     print(f"\n{name} ({size} ship)")
     print("=" * int(len(size) + len(name) + 8))  # underline w the same length of chars
     print(f"- Class: {fake.starship_class()}")
     print(f"- Registry: {fake.starship_registry()}")
+    gen_names(size)
 
 
-def main():
-    """generate starship based off of argument given"""
+def parse_arguments():
+    """sort through provided arguments"""
     parser = argparse.ArgumentParser()
     # group for choosing ship size (must provide one)
     size_group = parser.add_mutually_exclusive_group()
@@ -66,26 +67,39 @@ def main():
         action="store_true",
     )
 
+    civ_mil_group = parser.add_mutually_exclusive_group()
+    civ_mil_group.add_argument(
+        "--civ", help="choose ship class from civilian ships", action="store_true"
+    )
+    civ_mil_group.add_argument(
+        "--mil", help="choose ship class from military ships", action="store_true"
+    )
+
     args = parser.parse_args()
 
     if args.small:
-        gen_starship("small")
-        gen_names("small")
+        size = "small"
     elif args.medium:
-        gen_starship("medium")
-        gen_names("medium")
+        size = "medium"
     elif args.large:
-        gen_starship("large")
-        gen_names("large")
-    elif args.random:
-        size = choice(["small", "medium", "large"])
-        gen_starship(size)
-        gen_names(size)
+        size = "large"
     else:
         size = choice(["small", "medium", "large"])
-        gen_starship(size)
-        gen_names(size)
-        # parser.print_help()
+
+    if args.civ:
+        availability = "civilian"
+    elif args.mil:
+        availability = "military"
+    else:
+        availability = None
+
+    return size, availability
+
+
+def main():
+    """generate starship based off of argument given"""
+    size, availability = parse_arguments()
+    gen_starship(size, availability)
 
 
 fake = Faker("en_US")

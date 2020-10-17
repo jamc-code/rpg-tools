@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from faker.providers import BaseProvider
-from lib.common_names import nonbinary_names
+from lib.nonbinary_names import nonbinary_names
 
 
 class Provider(BaseProvider):

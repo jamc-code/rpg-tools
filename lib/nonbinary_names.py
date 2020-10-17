@@ -61,6 +61,7 @@ nonbinary_names = {
     "Shae",
     "Shiloh",
     "Skyler",
+    "Sonia",
     "Spencer",
     "Stevie",
     "Story",
