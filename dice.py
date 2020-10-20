@@ -28,12 +28,14 @@ def roll_dice(sides, again=None, rolling=None, total=None):
                 pass
             else:
                 break
+
         # roll set number of times
         elif isinstance(again, int) and not total:
             for i in range(1, again + 1):
                 roll = randint(1, sides)
                 print(f"You rolled a {roll} on a d{sides}")
             break
+
         # roll set number of times and sum up total
         elif isinstance(again, int) and total:
             total = 0
@@ -70,24 +72,25 @@ def interactive(starting=None):
 
 # TODO option to sum x highest/lowest rolls
 # TODO option to specify number of times to roll die and average -a d12 4
-# TODO option to roll with advantage/disadvantage, this will require basic sorting algo
+# TODO option to roll with advantage/disadvantage
 def with_args():
     """roll dice based off of values passed as args"""
     parser = argparse.ArgumentParser(
         description="""Roll dice. If no arguments are given,
                     interactive mode is assumed."""
     )
-    group_exclude = parser.add_mutually_exclusive_group()
 
-    group_exclude.add_argument(
+    repeat_group = parser.add_mutually_exclusive_group()
+    repeat_group.add_argument(
         "-c", "--count", type=int, help="number of times to roll die"
     )
-    group_exclude.add_argument(
+    repeat_group.add_argument(
         "-r",
         "--repeat",
         action="store_true",
         help="repeat rolls for as long as desired, with {sides} as starting",
     )
+
     parser.add_argument("sides", type=int, help="number of sides on die to roll")
     parser.add_argument(
         "-t",
@@ -99,7 +102,7 @@ def with_args():
 
     args = parser.parse_args()
 
-    # TODO maybe split this into cascading ifs instead of one block
+    # TODO definitely switch these to var assignments, this is confusing
     if args.repeat:
         interactive(starting=args.sides)
     elif args.sides and not args.count and not args.total:
@@ -122,6 +125,7 @@ def main():
         interactive()
     else:
         with_args()
+    exit(0)
 
 
 if __name__ == "__main__":

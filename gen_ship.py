@@ -5,13 +5,8 @@
 import argparse
 from faker import Faker
 from faker_starship import Provider as StarshipProvider
+from lib.ship_type import give_ship_type
 from random import choice, randint
-
-# TODO immersive ship size names in another file and import them
-# TODO break these into lists within lists for military and civilian, add args
-small_ships = ["cutter", "patrol boat", "yacht", "smuggler"]
-medium_ships = ["destroyer", "frigate", "passenger liner", "corvette"]
-large_ships = ["carrier", "battleship", "hospital ship", "freighter"]
 
 
 def gen_names(size: str):
@@ -40,8 +35,10 @@ def gen_starship(size: str, availability=None):
     """generate a starship name, class and registry"""
     name = fake.starship_name()
     print(f"\n{name} ({size} ship)")
-    print("=" * int(len(size) + len(name) + 8))  # underline w the same length of chars
-    print(f"- Class: {fake.starship_class()}")
+    print("-" * int(len(size) + len(name) + 8))  # underline w the same length of chars
+    # TODO redo existing ship classes when lore is more fleshed out
+    # print(f"- Class: {fake.starship_class()}")
+    print(f"- Type: {give_ship_type(size)}")
     print(f"- Registry: {fake.starship_registry()}")
     gen_names(size)
 
@@ -100,6 +97,7 @@ def main():
     """generate starship based off of argument given"""
     size, availability = parse_arguments()
     gen_starship(size, availability)
+    exit(0)
 
 
 fake = Faker("en_US")

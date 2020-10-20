@@ -33,6 +33,7 @@ nonbinary_names = {
     "Haven",
     "Hayden",
     "Indigo",
+    "James",
     "Jordan",
     "Justice",
     "Landry",
