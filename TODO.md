@@ -1,1 +1,2 @@
 - [ ] Write tests
+- [ ] Output flag for generators
