@@ -34,7 +34,7 @@ def gen_names(size: str):
 def gen_starship(size: str, availability=None):
     """generate a starship name, class and registry"""
     name = fake.starship_name()
-    print(f"\n{name} ({size} ship)")
+    print(f"{name} ({size} ship)")
     print("-" * int(len(size) + len(name) + 8))  # underline w the same length of chars
     # TODO redo existing ship classes when lore is more fleshed out
     # print(f"- Class: {fake.starship_class()}")

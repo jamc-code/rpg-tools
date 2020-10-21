@@ -1,2 +1,7 @@
 - [ ] Write tests
 - [ ] Output flag for generators
+- [ ] Improve `gen_ship.py` to save generated ships
+- [x] Switch to more immersive ship size names
+- [x] Choose uniform ship classes and registries
+- [x] Better nonbinary names
+- [x] Change formatting of output with any generators to export to markdown

@@ -14,7 +14,7 @@ def advantage(adv: str):
     if adv == "adv":
         print("With advantage, you rolled a", sorted(rolls)[2])
     elif adv == "disadv":
-        print("With advantage, you rolled a", sorted(rolls)[1])
+        print("With disadvantage, you rolled a", sorted(rolls)[1])
     exit(0)
 
 
