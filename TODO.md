@@ -1,6 +1,7 @@
+- [ ] Implement a database for game info (chars, settings, etc.)
 - [ ] Write tests
 - [ ] Output flag for generators
-- [ ] Improve `gen_ship.py` to save generated ships
+- [x] Create config file for storing file locations
 - [x] Switch to more immersive ship size names
 - [x] Choose uniform ship classes and registries
 - [x] Better nonbinary names

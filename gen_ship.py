@@ -36,16 +36,28 @@ def gen_starship(size: str, availability=None):
     name = fake.starship_name()
     print(f"{name} ({size} ship)")
     print("-" * int(len(size) + len(name) + 8))  # underline w the same length of chars
-    # TODO redo existing ship classes when lore is more fleshed out
+    # TODO redo existing ship classes to match typing when lore is more fleshed out
     # print(f"- Class: {fake.starship_class()}")
     print(f"- Type: {give_ship_type(size)}")
     print(f"- Registry: {fake.starship_registry()}")
     gen_names(size)
 
 
+def output_to_file(filename: str):
+    """write to stdout and specified file"""
+    ...
+
+
 def parse_arguments():
     """sort through provided arguments"""
     parser = argparse.ArgumentParser()
+    civ_mil_group = parser.add_mutually_exclusive_group()
+    civ_mil_group.add_argument(
+        "--civ", help="choose ship class from civilian ships", action="store_true"
+    )
+    civ_mil_group.add_argument(
+        "--mil", help="choose ship class from military ships", action="store_true"
+    )
     # group for choosing ship size (must provide one)
     size_group = parser.add_mutually_exclusive_group()
     size_group.add_argument(
@@ -64,14 +76,13 @@ def parse_arguments():
         action="store_true",
     )
 
-    civ_mil_group = parser.add_mutually_exclusive_group()
-    civ_mil_group.add_argument(
-        "--civ", help="choose ship class from civilian ships", action="store_true"
+    # TODO if config file exists, use as default output, otherwise require arg
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="""output to file. defaults to location
+                        specified in config""",
     )
-    civ_mil_group.add_argument(
-        "--mil", help="choose ship class from military ships", action="store_true"
-    )
-
     args = parser.parse_args()
 
     if args.small:
