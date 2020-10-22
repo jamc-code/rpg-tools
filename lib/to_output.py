@@ -1,12 +1,35 @@
 # get location of file to output generation to
-import configparser
+from configparser import ConfigParser
 from datetime import datetime
 from os import path
 import regex
 
 
+def create_option(config_file, option: str):
+    """prompt for user to provide value for {option}"""
+    # TODO create fp if it doesnt exist
+    output_file = input("Path to output file (use relative path): ")
+    save = input("Save as default location? [Y/n] ").lower()
+    if save == "y":
+        config = ConfigParser()
+        config.read(config_file, "utf-8")
+        if not config.has_section("OUTPUT"):
+            config.add_section("OUTPUT")
+        config.set("OUTPUT", option, output_file)
+        # TODO find way to preserve comments
+        #      readlines file, insert new option after OUTPUT, write to tmp file w
+        #      writelines and rename
+        with open(config_file, "a") as file:
+            config.write(file)
+    else:
+        pass
+
+    return output_file
+
+
 def get_latest_edit(filename: str):
     """find latest edit in file and append new data"""
+    # TODO if path doesn't exist, create full path
     if path.isfile(filename) and path.getsize(filename) > 0:
         with open(filename, "r") as file:
             text = file.read()
@@ -22,21 +45,23 @@ def get_latest_edit(filename: str):
     return
 
 
-# TODO add section if it doesnt exist
-def get_output_location(config_file: str, section: str, option: str):
+def get_output_location(config_file: str, option: str):
     """output to file and stdout using path set in config"""
-    config = configparser.ConfigParser()
+    config = ConfigParser()
     config.read(config_file, "utf-8")
-    if config.has_option(section, option):
-        output_file = f".{config.get(section, option)}"
+
+    if not config.has_section("OUTPUT"):  # create output section if it doesn't exist
+        config.add_section("OUTPUT")
+    if config.has_option("OUTPUT", option):
+        # TODO check if value is relative ('./file') before stripping to avoid
+        #      messing up full file paths ('/path/to/file')
+        # get value from config, then append full file path to avoid path errors
+        output_file = config.get("OUTPUT", option).lstrip("./")
+        output_file = (
+            f"{path.dirname(path.dirname(path.abspath(__file__)))}/{output_file}"
+        )
     else:
-        output_file = input("Path to output file: ")
-        save = input("Save as default location? [Y/n] ").lower()
-        if save == "y":
-            config.set(section, option, output_file)
-            config.write()
-        else:
-            pass
+        output_file = create_option(config_file, option)
 
     return output_file
 
@@ -56,7 +81,7 @@ def to_output(generator: str, new_text: str):
     current_date = datetime.now().strftime("%Y-%m-%d")
     # TODO is it donkey-brained to use this to find file when '../config.ini' is same?
     config_location = f"{path.dirname(path.dirname(path.abspath(__file__)))}/config.ini"
-    output_file = get_output_location(config_location, "OUTPUT", generator)
+    output_file = get_output_location(config_location, generator)
     add_datestamp = get_latest_edit(output_file)
     write_to_file(output_file, new_text, add_datestamp)
 
