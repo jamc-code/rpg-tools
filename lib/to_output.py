@@ -1,14 +1,14 @@
+# TODO switch os.path to pathlib.Path
 # get location of file to output generation to
 from configparser import ConfigParser
 from datetime import datetime
-from os import path
+from os import makedirs, path
 import regex
 
 
 def create_option(config_file, option: str):
     """prompt for user to provide value for {option}"""
-    # TODO create fp if it doesnt exist
-    output_file = input("Path to output file (use relative path): ")
+    output_file = input("Path to output file: ")
     save = input("Save as default location? [Y/n] ").lower()
     if save == "y":
         config = ConfigParser()
@@ -17,7 +17,7 @@ def create_option(config_file, option: str):
             config.add_section("OUTPUT")
         config.set("OUTPUT", option, output_file)
         # TODO find way to preserve comments
-        #      readlines file, insert new option after OUTPUT, write to tmp file w
+        #      readlines file, insert new option after OUTPUT, write to tmp file with
         #      writelines and rename
         with open(config_file, "a") as file:
             config.write(file)
@@ -29,7 +29,6 @@ def create_option(config_file, option: str):
 
 def get_latest_edit(filename: str):
     """find latest edit in file and append new data"""
-    # TODO if path doesn't exist, create full path
     if path.isfile(filename) and path.getsize(filename) > 0:
         with open(filename, "r") as file:
             text = file.read()
@@ -53,13 +52,14 @@ def get_output_location(config_file: str, option: str):
     if not config.has_section("OUTPUT"):  # create output section if it doesn't exist
         config.add_section("OUTPUT")
     if config.has_option("OUTPUT", option):
-        # TODO check if value is relative ('./file') before stripping to avoid
-        #      messing up full file paths ('/path/to/file')
         # get value from config, then append full file path to avoid path errors
-        output_file = config.get("OUTPUT", option).lstrip("./")
-        output_file = (
-            f"{path.dirname(path.dirname(path.abspath(__file__)))}/{output_file}"
-        )
+        # if it starts with a relative path, expand it
+        output_file = config.get("OUTPUT", option)
+        if output_file[0:2] == "./":
+            output_file = output_file.lstrip("./")
+            output_file = (
+                f"{path.dirname(path.dirname(path.abspath(__file__)))}/{output_file}"
+            )
     else:
         output_file = create_option(config_file, option)
 
@@ -69,17 +69,30 @@ def get_output_location(config_file: str, option: str):
 def write_to_file(output_file: str, new_text: str, add_datestamp=False):
     """write string to specified output file"""
     get_latest_edit(output_file)
-    with open(output_file, "a") as file:
-        if add_datestamp == True:
-            file.write(f"{current_date}\n" + "=" * 10 + "\n")
-        file.write(new_text)
-    return
+    while True:
+        try:
+            with open(output_file, "a") as file:
+                if add_datestamp == True:
+                    file.write(f"{current_date}\n" + "=" * 10 + "\n")
+                file.write(new_text)
+            return
+
+        except FileNotFoundError:
+            # TODO check OS type and fallback to '\' for windows (bleh)
+            out_fp = output_file.split("/")[:-1]
+            out_fp = "/".join(out_fp)
+            proceed = input(f"Create '{out_fp}'? [Y/n] ").lower()
+            if proceed == "y":
+                makedirs(out_fp)
+            else:
+                print("Directory does not exist.\nExiting.")
+                exit(1)
 
 
 def to_output(generator: str, new_text: str):
     """find file and write to it"""
     current_date = datetime.now().strftime("%Y-%m-%d")
-    # TODO is it donkey-brained to use this to find file when '../config.ini' is same?
+    # TODO check if config file exists
     config_location = f"{path.dirname(path.dirname(path.abspath(__file__)))}/config.ini"
     output_file = get_output_location(config_location, generator)
     add_datestamp = get_latest_edit(output_file)

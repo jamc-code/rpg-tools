@@ -6,6 +6,7 @@ import argparse
 from faker import Faker
 from faker_starship import Provider as StarshipProvider
 from lib.ship_type import give_ship_type
+from lib.to_output import to_output
 from random import choice, randint
 
 
@@ -25,27 +26,33 @@ def gen_names(size: str):
             assistant = None
 
     if assistant:
-        print(f"- {pilot}: {fake.name()}")
-        print(f"- {assistant}: {fake.name()}\n")
+        crew = f"""\r
+                \r- {pilot}: {fake.name()}
+                \r- {assistant}: {fake.name()}\n""".lstrip()
     else:
-        print(f"- {pilot}: {fake.name()}\n")
+        crew = f"- {pilot}: {fake.name()}\n"
+
+    return crew
 
 
 def gen_starship(size: str, availability=None):
     """generate a starship name, class and registry"""
-    name = fake.starship_name()
-    print(f"{name} ({size} ship)")
-    print("-" * int(len(size) + len(name) + 8))  # underline w the same length of chars
     # TODO redo existing ship classes to match typing when lore is more fleshed out
     # print(f"- Class: {fake.starship_class()}")
-    print(f"- Type: {give_ship_type(size)}")
-    print(f"- Registry: {fake.starship_registry()}")
-    gen_names(size)
+    name = fake.starship_name()
+    crew = gen_names(size)
+    ship = f"""
+            \r{name} ({size} ship)
+            \r{"-" * int(len(size) + len(name) + 8)}
+            \r- Type: {give_ship_type(size)}
+            \r- Registry: {fake.starship_registry()}
+            \r{crew}""".lstrip(
+        "\n"
+    )
 
+    print(ship)
 
-def output_to_file(filename: str):
-    """write to stdout and specified file"""
-    ...
+    return ship
 
 
 def parse_arguments():
@@ -80,8 +87,9 @@ def parse_arguments():
     parser.add_argument(
         "-o",
         "--output",
-        help="""output to file. defaults to location
-                        specified in config""",
+        help="""write to stdout and output file. defaults to location
+                specified in config""",
+        action="store_true",
     )
     args = parser.parse_args()
 
@@ -101,13 +109,20 @@ def parse_arguments():
     else:
         availability = None
 
-    return size, availability
+    if args.output:
+        output = True
+    else:
+        output = None
+
+    return size, availability, output
 
 
 def main():
     """generate starship based off of argument given"""
-    size, availability = parse_arguments()
-    gen_starship(size, availability)
+    size, availability, output = parse_arguments()
+    ship = gen_starship(size, availability)
+    if output:
+        to_output("GenShip", f"{ship}\n")
     exit(0)
 
 

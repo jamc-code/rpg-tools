@@ -22,7 +22,6 @@ def give_ship_type(ship: str, civ_mil=None):
     elif ship == "large":
         return choice(large[legality])
     else:
-        # TODO below line is stupid and hacky so fix it later
         return choice(
             (choice(small[legality]), choice(medium[legality]), choice(large[legality]))
         )
