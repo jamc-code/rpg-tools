@@ -92,10 +92,10 @@ def parse_arguments():
     # cannot select more than one gender (not irl, just for name)
     gender_group = parser.add_mutually_exclusive_group(required=False)
     gender_group.add_argument(
-        "-f", "--Female", help="generate a Female npc", action="store_true",
+        "-f", "--female", help="generate a Female npc", action="store_true",
     )
     gender_group.add_argument(
-        "-n", "--Nonbinary", help="generate a Nonbinary npc", action="store_true"
+        "-n", "--nonbinary", help="generate a Nonbinary npc", action="store_true"
     )
     gender_group.add_argument(
         "-m", "--male", help="generate a male npc", action="store_true"
@@ -131,9 +131,9 @@ def parse_arguments():
     else:
         age_group = choice(["young", "middle", "old"])
 
-    if args.Female:
+    if args.female:
         gender = "Female"
-    elif args.Nonbinary:
+    elif args.nonbinary:
         if randint(1, 10) > 1:
             gender = "Nonbinary"
         else:

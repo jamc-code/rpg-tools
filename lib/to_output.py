@@ -85,7 +85,7 @@ def write_to_file(output_file: str, new_text: str, add_datestamp=False):
             if proceed == "y":
                 makedirs(out_fp)
             else:
-                print("Directory does not exist.\nExiting.")
+                print("\nCan't write to file if filepath doesn't exist.\nExiting.")
                 exit(1)
 
 
