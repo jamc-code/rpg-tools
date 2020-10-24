@@ -13,23 +13,23 @@ from random import choice, randint
 
 def gen_person(gender: str, age_group: str):
     """generate a person and gather some additional info"""
-    if gender == "Female":
+    if gender == "female":
         name = fake.name_female()
-        name = give_prefix(name, "Female")
-        name = give_suffix(name, "Female")
-    elif gender == "Male":
+        name = give_prefix(name, "female")
+        name = give_suffix(name, "female")
+    elif gender == "male":
         name = fake.name_male()
-        name = give_prefix(name, "Male")
-        name = give_suffix(name, "Male")
+        name = give_prefix(name, "male")
+        name = give_suffix(name, "male")
     else:
         # 25% chance to skip the last name (it usually sounds really cool)
         if randint(1, 4) > 3:
             name = fake.real_name_nonbinary()
-            name = give_prefix(name, "Nonbinary")
+            name = give_prefix(name, "nonbinary")
         else:
             name = f"{fake.real_name_nonbinary()} {fake.last_name()}"
-            name = give_prefix(name, "Nonbinary")
-            name = give_suffix(name, "Nonbinary")
+            name = give_prefix(name, "nonbinary")
+            name = give_suffix(name, "nonbinary")
 
     company = fake.company()
     job = fake.job()
@@ -55,9 +55,9 @@ def give_prefix(name: str, gender: str):
     """12.5\% chance to assign a prefix to a name"""
     prefix_chance = randint(1, 8)
     if prefix_chance > 7:
-        if gender == "Female":
+        if gender == "female":
             name = f"{fake.prefix_female()} {name}"
-        elif gender == "Male":
+        elif gender == "male":
             name = f"{fake.prefix_male()} {name}"
         else:
             name = f"{fake.prefix_nonbinary()} {name}"
@@ -68,9 +68,9 @@ def give_suffix(name: str, gender: str):
     """12.5\% chance to assign a suffix to a name"""
     suffix_chance = randint(1, 8)
     if suffix_chance > 7:
-        if gender == "Female":
+        if gender == "female":
             name = f"{name} {fake.suffix_female()}"
-        elif gender == "Male":
+        elif gender == "male":
             name = f"{name} {fake.suffix_male()}"
         else:
             name = f"{name} {fake.suffix_nonbinary()}"
@@ -118,7 +118,7 @@ def parse_arguments():
     # if random is given, ignore all other flags and generate npc with random params
     if args.random:
         age_group = choice(["young", "middle", "old"])
-        gender = choice(["Female", "Nonbinary", "Male"])
+        gender = choice(["female", "nonbinary", "male"])
         name, company, job, age = gen_person(gender, age_group)
 
     # since age_group is optional during generation, a None value won't break the func
@@ -132,16 +132,16 @@ def parse_arguments():
         age_group = choice(["young", "middle", "old"])
 
     if args.female:
-        gender = "Female"
+        gender = "female"
     elif args.nonbinary:
         if randint(1, 10) > 1:
-            gender = "Nonbinary"
+            gender = "nonbinary"
         else:
             gender = "None"
     elif args.male:
-        gender = "Male"
+        gender = "male"
     else:
-        gender = choice(["Female", "Nonbinary", "Male"])
+        gender = choice(["female", "nonbinary", "male"])
 
     if args.output:
         output = True
@@ -158,7 +158,7 @@ def print_person(name: str, company: str, job: str, age: int, gender: str):
         \r{name}
         \r{'-' * len(name)}
         \r- Age: {age}
-        \r- Gender: {gender}
+        \r- Gender: {gender.title()}
         \r- Company: {company}
         \r- Job: {job}\n""".lstrip()
     print(person)

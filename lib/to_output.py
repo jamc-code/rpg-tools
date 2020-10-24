@@ -1,8 +1,8 @@
-# TODO switch os.path to pathlib.Path
 # get location of file to output generation to
 from configparser import ConfigParser
 from datetime import datetime
-from os import makedirs, path
+from os import makedirs
+from pathlib import Path
 import regex
 
 
@@ -29,7 +29,8 @@ def create_option(config_file, option: str):
 
 def get_latest_edit(filename: str):
     """find latest edit in file and append new data"""
-    if path.isfile(filename) and path.getsize(filename) > 0:
+    filepath = Path(filename)
+    if filepath.is_file() and filepath.stat().st_size > 0:
         with open(filename, "r") as file:
             text = file.read()
     else:
@@ -57,9 +58,7 @@ def get_output_location(config_file: str, option: str):
         output_file = config.get("OUTPUT", option)
         if output_file[0:2] == "./":
             output_file = output_file.lstrip("./")
-            output_file = (
-                f"{path.dirname(path.dirname(path.abspath(__file__)))}/{output_file}"
-            )
+            output_file = f"{p.parents[1]}/{output_file}"
     else:
         output_file = create_option(config_file, option)
 
@@ -93,13 +92,14 @@ def to_output(generator: str, new_text: str):
     """find file and write to it"""
     current_date = datetime.now().strftime("%Y-%m-%d")
     # TODO check if config file exists
-    config_location = f"{path.dirname(path.dirname(path.abspath(__file__)))}/config.ini"
+    config_location = f'{p.parents[1]}/config.ini'
     output_file = get_output_location(config_location, generator)
     add_datestamp = get_latest_edit(output_file)
     write_to_file(output_file, new_text, add_datestamp)
 
 
 current_date = datetime.now().strftime("%Y-%m-%d")
+p = Path(__file__).absolute()
 
 if __name__ == "__main__":
     to_output("GenPerson", "NEWTEXT\n\n")

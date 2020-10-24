@@ -18,7 +18,6 @@ def advantage(adv: str):
     exit(0)
 
 
-# TODO add option to press 'q' to exit
 def choose_sides():
     """choose the amount of sides on the die you want to roll"""
     choosing = True
@@ -39,6 +38,7 @@ def interactive(starting=None):
             sides = starting
         else:
             sides = choose_sides()
+        # this prevents choose_dice from being repeated
         started = True
         while True:
             roll_dice(sides, again=True)
@@ -47,11 +47,11 @@ def interactive(starting=None):
         if cont == "y":
             continue
         else:
-            break
+            exit(0)
 
 
 # TODO option to sum x highest/lowest rolls
-# TODO option to specify number of times to roll die and average -a d12 4
+# TODO round up/dowm (read manual to implement this correctly)
 def parse_args():
     """roll dice based off of values passed as args"""
     parser = argparse.ArgumentParser(
@@ -112,17 +112,17 @@ def parse_args():
     else:
         count = None
     if args.total:
-        total = True
+        total = 0
     else:
         total = None
 
     roll_dice(sides, count, total)
 
 
-# TODO split this up even more
 def roll_dice(sides, again=None, total=None):
     """roll a dice with {sides} specified by input"""
     rolling = True
+    times = 0
     while rolling:
         if again == True:
             print(f"You rolled a {randint(1, sides)} on a d{sides}")
@@ -133,24 +133,15 @@ def roll_dice(sides, again=None, total=None):
                 break
 
         # roll set number of times
-        elif isinstance(again, int) and not total:
+        elif isinstance(again, int):
             for i in range(1, again + 1):
                 roll = randint(1, sides)
                 print(f"You rolled a {roll} on a d{sides}")
-            break
-
-        # roll set number of times and sum up total
-        elif isinstance(again, int) and total:
-            total = 0
-            for i in range(1, again + 1):
-                roll = randint(1, sides)
-                print(f"You rolled a {roll} on a d{sides}")
-                total += roll
-            print("-" * 24)
-            print(f"Sum of rolls is {total}")
-            break
-        else:
-            print(f"You rolled a {randint(1, sides)} on a d{sides}")
+                # if total is passed, sum rolls
+                if total == 0:
+                    total += roll
+            if total and total > 0:
+                print(f"{'-' * 24}\n   Sum of rolls is {total}")
             break
 
 
@@ -160,11 +151,15 @@ def main():
     """
     # we're using argv here to negate the need for a whole parser
     # just in case the user wants to enter interactive mode
-    if not len(argv) > 1:
-        interactive()
-    else:
-        parse_args()
-    exit(0)
+    try:
+        if not len(argv) > 1:
+            interactive()
+        else:
+            parse_args()
+            exit(0)
+    except KeyboardInterrupt:
+        print("\nCtrl-C entered. Exiting.")
+        exit(0)
 
 
 if __name__ == "__main__":

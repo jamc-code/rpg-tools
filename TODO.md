@@ -1,4 +1,5 @@
 - [ ] Implement a database for game info (chars, settings, etc.)
+- [ ] Better project structure
 - [ ] Write tests
 - [ ] Allow output location to be passed after '-o'
 - [x] Output flag for generators
