@@ -58,7 +58,7 @@ def get_output_location(config_file: str, option: str):
         output_file = config.get("OUTPUT", option)
         if output_file[0:2] == "./":
             output_file = output_file.lstrip("./")
-            output_file = f"{p.parents[1]}/{output_file}"
+            output_file = f"{p.parents[2]}/{output_file}"
     else:
         output_file = create_option(config_file, option)
 
@@ -92,7 +92,7 @@ def to_output(generator: str, new_text: str):
     """find file and write to it"""
     current_date = datetime.now().strftime("%Y-%m-%d")
     # TODO check if config file exists
-    config_location = f'{p.parents[1]}/config.ini'
+    config_location = f'{p.parents[2]}/config.ini'
     output_file = get_output_location(config_location, generator)
     add_datestamp = get_latest_edit(output_file)
     write_to_file(output_file, new_text, add_datestamp)
