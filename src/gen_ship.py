@@ -44,7 +44,7 @@ def gen_starship(size: str, availability=None):
     ship = f"""
             \r{name} ({size} ship)
             \r{"-" * int(len(size) + len(name) + 8)}
-            \r- Type: {give_ship_type(size)}
+            \r- Type: {give_ship_type(size, availability)}
             \r- Registry: {fake.starship_registry()}
             \r{crew}""".lstrip(
         "\n"
@@ -123,7 +123,6 @@ def main():
     ship = gen_starship(size, availability)
     if output:
         to_output("GenShip", f"{ship}\n")
-    exit(0)
 
 
 fake = Faker("en_US")

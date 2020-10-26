@@ -15,7 +15,7 @@ Currently, the generators are aimed at a sci-fi setting, but I plan on adding fa
 - `gen_ship.py` generates a spaceship using [faker-starship](https://pypi.org/project/faker-starship/) for the names and registries. It takes arguments for ship size and legality
   - `lib/ship_type.py` is a script I wrote to overwrite the default ship classes that it provides in favor of broad ship types, such as "bomber" or "freighter." It creates these labels based off of the ship's size and legality (civilian or military).
 
-`lib/to_output.py` provides output arguments to both generators, allowing anything created to be saved in a file. I wrote this before I realized that the `logging` module exists, but it works so for now it stays.
+- `lib/to_output.py` provides output arguments to both generators, allowing anything created to be saved in a file. I wrote this before I realized that the `logging` module exists, but it works so for now it stays.
 
 ## TODO
 - [ ] Implement a database for game info (chars, settings, etc.)

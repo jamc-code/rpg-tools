@@ -5,26 +5,11 @@ from random import choice
 
 def give_ship_type(ship: str, civ_mil=None):
     """choose classification for a ship based off of size and availability"""
-    if civ_mil == "civ":
-        legality = "civilian"
-    elif civ_mil == "mil":
-        legality = "military"
-    else:
-        legality = choice(["civilian", "military"])
+    if not civ_mil:
+        civ_mil = choice(["civilian", "military"])
 
-    # if ship not in ["small", "medium", "large"]:
-    #    ship = choice(["small", "medium", "large"])
-
-    if ship == "small":
-        return choice(small[legality])
-    elif ship == "medium":
-        return choice(medium[legality])
-    elif ship == "large":
-        return choice(large[legality])
-    else:
-        return choice(
-            (choice(small[legality]), choice(medium[legality]), choice(large[legality]))
-        )
+    # accesses dict by name of {ship} with key of {civ_mil}
+    return choice(globals()[ship][civ_mil])
 
 
 def main():

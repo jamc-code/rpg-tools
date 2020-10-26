@@ -52,7 +52,7 @@ def give_age(age_group: str):
 
 
 def give_prefix(name: str, gender: str):
-    """12.5\% chance to assign a prefix to a name"""
+    """12.5% chance to assign a prefix to a name"""
     prefix_chance = randint(1, 8)
     if prefix_chance > 7:
         if gender == "female":
@@ -65,7 +65,7 @@ def give_prefix(name: str, gender: str):
 
 
 def give_suffix(name: str, gender: str):
-    """12.5\% chance to assign a suffix to a name"""
+    """12.5% chance to assign a suffix to a name"""
     suffix_chance = randint(1, 8)
     if suffix_chance > 7:
         if gender == "female":
@@ -117,9 +117,7 @@ def parse_arguments():
 
     # if random is given, ignore all other flags and generate npc with random params
     if args.random:
-        age_group = choice(["young", "middle", "old"])
-        gender = choice(["female", "nonbinary", "male"])
-        name, company, job, age = gen_person(gender, age_group)
+        pass
 
     # since age_group is optional during generation, a None value won't break the func
     if args.young:

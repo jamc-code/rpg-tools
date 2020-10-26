@@ -26,7 +26,7 @@ def choose_sides():
             sides = int(input("What sided die would you like to roll? "))
             return sides
         except (TypeError, ValueError):
-            print("Postitive integers only please!")
+            print("Positive integers only please!")
             exit(1)
 
 
@@ -34,7 +34,7 @@ def interactive(starting=None):
     """interactively roll dice"""
     started = False
     while True:
-        if starting and started == False:
+        if starting and started is False:
             sides = starting
         else:
             sides = choose_sides()
@@ -51,7 +51,7 @@ def interactive(starting=None):
 
 
 # TODO option to sum x highest/lowest rolls
-# TODO round up/dowm (read manual to implement this correctly)
+# TODO round up/down (read manual to implement this correctly)
 def parse_args():
     """roll dice based off of values passed as args"""
     parser = argparse.ArgumentParser(
@@ -105,6 +105,7 @@ def parse_args():
         sides = args.sides
     else:
         sides = choose_sides()
+
     if args.repeat:
         interactive(sides)
     if args.count:
@@ -112,7 +113,7 @@ def parse_args():
     else:
         count = None
     if args.total:
-        total = 0
+        total = True
     else:
         total = None
 
@@ -122,9 +123,8 @@ def parse_args():
 def roll_dice(sides, again=None, total=None):
     """roll a dice with {sides} specified by input"""
     rolling = True
-    times = 0
     while rolling:
-        if again == True:
+        if again is True:
             print(f"You rolled a {randint(1, sides)} on a d{sides}")
             reroll = input("Roll again? ").lower()
             if reroll == "y":
@@ -134,15 +134,23 @@ def roll_dice(sides, again=None, total=None):
 
         # roll set number of times
         elif isinstance(again, int):
+            roll_sum = 0
             for i in range(1, again + 1):
                 roll = randint(1, sides)
                 print(f"You rolled a {roll} on a d{sides}")
                 # if total is passed, sum rolls
-                if total == 0:
-                    total += roll
+                if total:
+                    roll_sum += roll
             if total and total > 0:
-                print(f"{'-' * 24}\n   Sum of rolls is {total}")
+                if sides >= 10:
+                    print(f"{'-' * 24}\n   Sum of rolls is {roll_sum}")
+                else:
+                    print(f"{'-' * 22}\n   Sum of rolls is {roll_sum}")
             break
+
+        else:
+            print(f"You rolled a {randint(1, sides)} on a d{sides}")
+            exit(0)
 
 
 def main():
@@ -156,10 +164,9 @@ def main():
             interactive()
         else:
             parse_args()
-            exit(0)
     except KeyboardInterrupt:
         print("\nCtrl-C entered. Exiting.")
-        exit(0)
+    exit(0)
 
 
 if __name__ == "__main__":
