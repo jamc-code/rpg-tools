@@ -104,7 +104,6 @@ def parse_arguments():
         "-r", "--random", help="create a randomized npc (default)", action="store_true",
     )
 
-    # TODO option to give path as arg
     parser.add_argument(
         "-o",
         "--output",

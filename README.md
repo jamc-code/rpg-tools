@@ -30,4 +30,4 @@ Currently, the generators are aimed at a sci-fi setting, but I plan on adding fa
 - [x] Change formatting of output with any generators to export to markdown
 
 ## Bugs
-If you notice any bugs, please submit an issue.
+If you notice any bugs, please submit an issue. I'm self-taught and this is my first "big" project so it might be a bit buggy at times :)

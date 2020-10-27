@@ -1,7 +1,7 @@
 # get location of file to output generation to
 from configparser import ConfigParser
 from datetime import datetime
-from os import makedirs
+from os import makedirs, name
 from pathlib import Path
 import regex
 
@@ -80,15 +80,24 @@ def write_to_file(option: str, output_file: str, new_text: str, add_datestamp=Fa
             return
 
         except FileNotFoundError:
-            # TODO check OS type and fallback to '\' for windows
-            out_fp = output_file.split("/")[:-1]
-            out_fp = "/".join(out_fp)
-            proceed = input(f"Create '{out_fp}'? [Y/n] ").lower()
-            if proceed == "y":
-                makedirs(out_fp)
+            if name == "posix":
+                out_fp = output_file.split("/")[:-1]
+                out_fp = "/".join(out_fp)
+                proceed = input(f"Create '{out_fp}'? [Y/n] ").lower()
+                if proceed == "y":
+                    makedirs(out_fp)
+                else:
+                    output_file = create_option(config_location, option)
+                    pass
             else:
-                output_file = create_option(config_location, option)
-                pass
+                out_fp = output_file.split("\\")[:-1]
+                out_fp = "\\".join(out_fp)
+                proceed = input(f"Create '{out_fp}'? [Y/n] ").lower()
+                if proceed == "y":
+                    makedirs(out_fp)
+                else:
+                    output_file = create_option(config_location, option)
+                    pass
 
 
 def to_output(generator: str, new_text: str):
