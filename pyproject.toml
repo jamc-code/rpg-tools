@@ -1,2 +1,29 @@
+[project]
+name = "rpg-tools"
+version = 0.1.0
+description = "suite of tools designed to help with dm'ing rpgs"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+keywords = ["rpg", "dice", "generation", "faker", "dm", "roleplaying"]
+authors = [
+	{email = "jlearning@tuta.io"},
+	{name = "Julia"}
+]
+classifiers = [
+	"Development Status :: 4 - Beta",
+	"Environment :: Console",
+	"License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+	"Natural Language :: English",
+	"Topic :: Games/Entertainment :: Role-PlayingTopic :: Games/Entertainment :: Role-Playing"
+]
+dependencies = {file = "requirements.txt"}
+
+[project.optional-dependencies]
+test = "pytest < 6.1.2"
+
+[project.urls]
+repository = "github.com/sudo-julia/rpg-tools"
+
 [tool.black]
 line-length = 88

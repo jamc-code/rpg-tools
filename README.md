@@ -25,6 +25,7 @@ Currently, the generators are aimed at a sci-fi setting, but I plan on adding fa
 - [ ] Allow output location to be passed after '-o'
 - [ ] Town/location generator
   - [ ] Spacestation generator
+- [X] Add metadata to pyproject (PEP 621)
 - [x] Output flag for generators
 - [x] Create config file for storing file locations
 - [x] Switch to more immersive ship size names
