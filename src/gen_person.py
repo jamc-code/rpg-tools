@@ -8,7 +8,7 @@ import argparse
 from faker import Faker
 from lib.to_output import to_output
 from nonbinary_provider import Provider as NonbinaryProvider
-from random import choice, randint
+from random import (choice, randint)
 
 
 def gen_person(gender: str, age_group: str):
