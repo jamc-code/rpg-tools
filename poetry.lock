@@ -22,6 +22,14 @@ python-versions = "*"
 faker = "*"
 
 [[package]]
+name = "pysimplegui"
+version = "4.30.0"
+description = "GUI SDK Launched in 2018. It's 2020 and PySimpleGUI is actively developed and supported. Super-simple to create custom GUI's. 200+ Demo programs & Cookbook for rapid start. Extensive documentation. Main doc is www.PySimpleGUI.org.  Examples using Machine Learning(GUI, OpenCV Integration,  Chatterbot), Rainmeter Style Floating Desktop Widgets, Matplotlib + Pyplot integration, add GUI to command line scripts, PDF & Image Viewer. Great for beginners as well as advanced GUI programmers"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.1"
 description = "Extensions to the standard Python datetime module"
@@ -59,7 +67,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "f413bd5ef3d53845fcfa2b5adb645a34ad622195a7224a8541facdde809d79d8"
+content-hash = "774c7f2f2deec0c5639f727645bfc89a17436997b67615743f8da4ac5a357687"
 
 [metadata.files]
 faker = [
@@ -68,6 +76,10 @@ faker = [
 ]
 faker-starship = [
     {file = "faker_starship-0.0.1a1-py2.py3-none-any.whl", hash = "sha256:02b40e432907e2be4a6efc2c8a228b3a958f2a6203f5c111f118733a98043b01"},
+]
+pysimplegui = [
+    {file = "PySimpleGUI-4.30.0-py3-none-any.whl", hash = "sha256:181b9e65e9ddb4e85c1f0ffaff0d0c7ade0d1571158a4a979ebd4e006d870533"},
+    {file = "PySimpleGUI-4.30.0.tar.gz", hash = "sha256:9d8e6b8c4996c2478191b66559f00ef25f366e17ed709b5f6aa6a35a8f490e4f"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
