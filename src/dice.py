@@ -150,7 +150,7 @@ def roll_dice(sides, again=None, total=None):
 
         else:
             print(f"You rolled a {randint(1, sides)} on a d{sides}")
-            exit(0)
+            break
 
 
 def main():
@@ -166,6 +166,7 @@ def main():
             parse_args()
     except KeyboardInterrupt:
         print("\nCtrl-C entered. Exiting.")
+
     exit(0)
 
 

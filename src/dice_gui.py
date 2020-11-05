@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+import dice
 
 
 def main():
@@ -6,22 +7,26 @@ def main():
         [
             # TODO output only stores one line, have it write like stdout
             sg.Output(
-                size=(90, 25), tooltip="Results of the dice rolled", key="-OUTPUT-"
+                size=(90, 25),
+                echo_stdout_stderr=True,
+                tooltip="Results of the dice rolled",
+                key="-OUTPUT-",
             )
         ],
         [
+            # TODO find way to make to auto-clear this field when clicked on
             sg.Input(
-                20, size=(8, 1), tooltip="Amount of sides on the dice", key="-IN-"
+                20, size=(8, 1), tooltip="Amount of sides on the dice", key="-SIDES-"
             ),
+            # TODO disable if 'repeat' chosen and vice versa
             sg.Input(
-                "Count",
+                1,
                 size=(8, 1),
                 tooltip="Times to roll the dice. Disabled if Repeat button enabled",
+                key="-COUNT-",
             ),
-            # TODO is repeat unnecessary if you click button to roll?
-            sg.Radio(
-                "Repeat", "count_or_repeat", tooltip="Repeat the roll until specified"
-            ),
+            # TODO these need to be able to be unchecked
+            #      but remain in radio group to be one or the other
             sg.Radio(
                 "Adv.",
                 "adv_or_disadv",
@@ -53,13 +58,16 @@ def main():
         size=(600, 400),
         element_justification="center",
     )
+
     while True:
         event, values = window.read()
-        print(event, values)
         if event == sg.WIN_CLOSED or event == "Exit":
             break
         if event == "Roll!":
-            window["-OUTPUT-"].update(values["-IN-"])
+            sides = int(values["-SIDES-"])
+            count = int(values["-COUNT-"])
+            window["-OUTPUT-"].update(dice.roll_dice(sides, count))
+            window.Refresh()
 
     window.close()
 
