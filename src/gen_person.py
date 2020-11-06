@@ -15,22 +15,18 @@ def gen_person(gender: str, age_group: str):
     """generate a person and gather some additional info"""
     if gender == "female":
         name = fake.name_female()
-        name = give_prefix(name, "female")
-        name = give_suffix(name, "female")
     elif gender == "male":
         name = fake.name_male()
-        name = give_prefix(name, "male")
-        name = give_suffix(name, "male")
     else:
+        gender = "nonbinary"
         # 25% chance to skip the last name (it usually sounds really cool)
         if randint(1, 4) > 3:
             name = fake.real_name_nonbinary()
-            name = give_prefix(name, "nonbinary")
         else:
             name = f"{fake.real_name_nonbinary()} {fake.last_name()}"
-            name = give_prefix(name, "nonbinary")
-            name = give_suffix(name, "nonbinary")
 
+    name = give_prefix(name, gender)
+    name = give_suffix(name, gender)
     company = fake.company()
     job = fake.job()
 
@@ -51,6 +47,8 @@ def give_age(age_group: str):
         return None
 
 
+# TODO is there a way to shorten this to one call?
+#      fake.prefix_{gender} + ' ' + name
 def give_prefix(name: str, gender: str):
     """12.5% chance to assign a prefix to a name"""
     prefix_chance = randint(1, 8)
