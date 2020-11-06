@@ -5,42 +5,46 @@ import dice
 def main():
     layout = [
         [
-            # TODO output only stores one line, have it write like stdout
+            # TODO disable typing in output box
             sg.Output(
-                size=(90, 25),
+                size=(90, 23),
                 echo_stdout_stderr=True,
                 tooltip="Results of the dice rolled",
                 key="-OUTPUT-",
             )
         ],
+        # TODO labels above or below the input fields
         [
             # TODO find way to make to auto-clear this field when clicked on
             sg.Input(
-                20, size=(8, 1), tooltip="Amount of sides on the dice", key="-SIDES-"
+                20,
+                size=(8, 1),
+                tooltip="Amount of sides on the dice, defaults to 20",
+                key="-SIDES-",
             ),
-            # TODO disable if 'repeat' chosen and vice versa
             sg.Input(
                 1,
                 size=(8, 1),
-                tooltip="Times to roll the dice. Disabled if Repeat button enabled",
+                tooltip="Times to roll the dice, defaults to 1",
                 key="-COUNT-",
             ),
-            # TODO these need to be able to be unchecked
-            #      but remain in radio group to be one or the other
             sg.Radio(
                 "Adv.",
                 "adv_or_disadv",
                 tooltip="Roll two d20 and choose the higher roll",
+                key="-ADV-",
             ),
             sg.Radio(
                 "Disadv.",
                 "adv_or_disadv",
                 tooltip="Roll two d20 and choose the lower roll",
+                key="-DISADV-",
             ),
             sg.Check(
                 "Sum rolls",
                 auto_size_text=True,
-                tooltip="Sum all rolls. Only valid with 'Count'",
+                tooltip="Sum all rolls",
+                key="-SUM-",
             ),
             sg.Submit(
                 "Roll!",
@@ -64,9 +68,30 @@ def main():
         if event == sg.WIN_CLOSED or event == "Exit":
             break
         if event == "Roll!":
-            sides = int(values["-SIDES-"])
-            count = int(values["-COUNT-"])
-            window["-OUTPUT-"].update(dice.roll_dice(sides, count))
+            if values["-ADV-"] or values["-DISADV-"]:
+                if values["-ADV-"]:
+                    radio = "-ADV-"
+                    window["-OUTPUT-"].update(dice.advantage("adv"))
+                elif values["-DISADV-"]:
+                    window["-OUTPUT-"].update(dice.advantage("disadv"))
+                    radio = "-DISADV-"
+            else:
+                radio = None
+                try:
+                    sides = int(values["-SIDES-"])
+                except ValueError:
+                    sides = 20
+                try:
+                    count = int(values["-COUNT-"])
+                except ValueError:
+                    count = 1
+                if values["-SUM-"]:
+                    sum_rolls = True
+                else:
+                    sum_rolls = None
+                window["-OUTPUT-"].update(dice.roll_dice(sides, count, sum_rolls, True))
+            if radio:
+                window.FindElement(radio).Update(False)
             window.Refresh()
 
     window.close()

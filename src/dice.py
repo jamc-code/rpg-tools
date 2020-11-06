@@ -12,10 +12,9 @@ def advantage(adv: str):
     for roll in rolls[1:]:
         print(f"You rolled a {roll} on a d20")
     if adv == "adv":
-        print("With advantage, you rolled a", sorted(rolls)[2])
+        print(f"With advantage, you rolled a {sorted(rolls)[2]}\n")
     elif adv == "disadv":
-        print("With disadvantage, you rolled a", sorted(rolls)[1])
-    exit(0)
+        print(f"With disadvantage, you rolled a {sorted(rolls)[1]}\n")
 
 
 def choose_sides():
@@ -98,12 +97,14 @@ def parse_args():
     args = parser.parse_args()
 
     if args.advantage:
-        advantage("adv")
+        adv_disadv = "adv"
     elif args.disadvantage:
-        advantage("disadv")
-    elif args.sides:
+        adv_disadv = "disadv"
+    elif not args.advantage and not args.disadvantage:
+        adv_disadv = None
+    if args.sides:
         sides = args.sides
-    else:
+    elif not args.sides and not adv_disadv:
         sides = choose_sides()
 
     if args.repeat:
@@ -117,10 +118,13 @@ def parse_args():
     else:
         total = None
 
-    roll_dice(sides, count, total)
+    if adv_disadv:
+        advantage(adv_disadv)
+    else:
+        roll_dice(sides, count, total)
 
 
-def roll_dice(sides, again=None, total=None):
+def roll_dice(sides, again=None, total=None, gui=None):
     """roll a dice with {sides} specified by input"""
     rolling = True
     while rolling:
@@ -142,10 +146,16 @@ def roll_dice(sides, again=None, total=None):
                 if total:
                     roll_sum += roll
             if total and total > 0:
-                if sides >= 10:
-                    print(f"{'-' * 24}\n   Sum of rolls is {roll_sum}")
+                if gui:
+                    sum_message = f"{'-' * 36}\n   Sum of rolls is {roll_sum}\n"
                 else:
-                    print(f"{'-' * 22}\n   Sum of rolls is {roll_sum}")
+                    if sides >= 10:
+                        sum_message = f"{'-' * 24}\n   Sum of rolls is {roll_sum}\n"
+                    else:
+                        sum_message = f"{'-' * 22}\n   Sum of rolls is {roll_sum}\n"
+                print(sum_message)
+            else:
+                print()
             break
 
         else:
