@@ -29,18 +29,12 @@ def choose_sides():
             exit(1)
 
 
-def interactive(starting=None):
+def interactive():
     """interactively roll dice"""
-    started = False
     while True:
-        if starting and started is False:
-            sides = starting
-        else:
-            sides = choose_sides()
-        # this prevents choose_dice from being repeated
-        started = True
+        sides = choose_sides()
         while True:
-            roll_dice(sides, again=True)
+            roll_dice(sides, repeat=True)
             break
         cont = input("Continue with different die? ").lower()
         if cont == "y":
@@ -108,7 +102,7 @@ def parse_args():
         sides = choose_sides()
 
     if args.repeat:
-        interactive(sides)
+        roll_dice(sides, repeat=True)
     if args.count:
         count = args.count
     else:
@@ -124,28 +118,27 @@ def parse_args():
         roll_dice(sides, count, total)
 
 
-def roll_dice(sides, again=None, total=None, gui=None):
+def roll_dice(sides, repeat=None, total=None, gui=None):
     """roll a dice with {sides} specified by input"""
     rolling = True
     while rolling:
-        if again is True:
+        if repeat is True:
             print(f"You rolled a {randint(1, sides)} on a d{sides}")
-            reroll = input("Roll again? ").lower()
+            reroll = input("Roll repeat? ").lower()
             if reroll == "y":
                 pass
             else:
                 break
-
         # roll set number of times
-        elif isinstance(again, int):
+        elif isinstance(repeat, int) and repeat > 1:
             roll_sum = 0
-            for i in range(1, again + 1):
+            for i in range(1, repeat + 1):
                 roll = randint(1, sides)
                 print(f"You rolled a {roll} on a d{sides}")
                 # if total is passed, sum rolls
                 if total:
                     roll_sum += roll
-            if total and total > 0:
+            if total:
                 if gui:
                     sum_message = f"{'-' * 36}\n   Sum of rolls is {roll_sum}\n"
                 else:
@@ -157,7 +150,6 @@ def roll_dice(sides, again=None, total=None, gui=None):
             else:
                 print()
             break
-
         else:
             print(f"You rolled a {randint(1, sides)} on a d{sides}")
             break

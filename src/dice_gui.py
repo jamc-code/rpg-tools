@@ -7,21 +7,22 @@ def main():
         [
             # TODO disable typing in output box
             sg.Output(
-                size=(90, 23),
+                size=(90, 25),
+                pad=(0, 5),
                 echo_stdout_stderr=True,
                 tooltip="Results of the dice rolled",
                 key="-OUTPUT-",
             )
         ],
-        # TODO labels above or below the input fields
         [
-            # TODO find way to make to auto-clear this field when clicked on
+            sg.Text("Sides:"),
             sg.Input(
                 20,
                 size=(8, 1),
                 tooltip="Amount of sides on the dice, defaults to 20",
                 key="-SIDES-",
             ),
+            sg.Text("Roll count:"),
             sg.Input(
                 1,
                 size=(8, 1),
