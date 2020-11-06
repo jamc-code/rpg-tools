@@ -20,12 +20,14 @@ Currently, the generators are aimed at a sci-fi setting, but I plan on adding fa
 ## TODO
 - [ ] Initiative tracker
 - [ ] Implement a database for game info (chars, settings, etc.)
-- [ ] Better project structure
 - [ ] Write tests
 - [ ] Allow output location to be passed after '-o'
 - [ ] Town/location generator
   - [ ] Spacestation generator
-- [X] Add metadata to pyproject (PEP 621)
+- [ ] GUI
+- [ ] Create releases for people without python installed
+- [X] Better project structure
+- [X] Add info to pyproject
 - [x] Output flag for generators
 - [x] Create config file for storing file locations
 - [x] Switch to more immersive ship size names

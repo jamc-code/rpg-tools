@@ -8,7 +8,7 @@ import argparse
 from faker import Faker
 from lib.to_output import to_output
 from nonbinary_provider import Provider as NonbinaryProvider
-from random import (choice, randint)
+from random import choice, randint
 
 
 def gen_person(gender: str, age_group: str):
@@ -92,7 +92,10 @@ def parse_arguments():
     # cannot select more than one gender (not irl, just for name)
     gender_group = parser.add_mutually_exclusive_group(required=False)
     gender_group.add_argument(
-        "-f", "--female", help="generate a Female npc", action="store_true",
+        "-f",
+        "--female",
+        help="generate a Female npc",
+        action="store_true",
     )
     gender_group.add_argument(
         "-n", "--nonbinary", help="generate a Nonbinary npc", action="store_true"
@@ -101,7 +104,10 @@ def parse_arguments():
         "-m", "--male", help="generate a male npc", action="store_true"
     )
     gender_group.add_argument(
-        "-r", "--random", help="create a randomized npc (default)", action="store_true",
+        "-r",
+        "--random",
+        help="create a randomized npc (default)",
+        action="store_true",
     )
 
     parser.add_argument(

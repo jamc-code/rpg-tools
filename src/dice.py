@@ -12,9 +12,10 @@ def advantage(adv: str):
     for roll in rolls[1:]:
         print(f"You rolled a {roll} on a d20")
     if adv == "adv":
-        print(f"With advantage, you rolled a {sorted(rolls)[2]}\n")
+        adv_message = f"With advantage, you rolled a {sorted(rolls)[2]}\n"
     elif adv == "disadv":
-        print(f"With disadvantage, you rolled a {sorted(rolls)[1]}\n")
+        adv_message = f"With disadvantage, you rolled a {sorted(rolls)[1]}\n"
+    print(adv_message)
 
 
 def choose_sides():

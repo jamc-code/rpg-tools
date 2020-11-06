@@ -7,7 +7,7 @@ from faker import Faker
 from faker_starship import Provider as StarshipProvider
 from lib.ship_type import give_ship_type
 from lib.to_output import to_output
-from random import (choice, randint)
+from random import choice, randint
 
 
 def gen_names(size: str):

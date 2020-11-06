@@ -2,14 +2,17 @@ import PySimpleGUI as sg
 import dice
 
 
+# TODO make whole thing prettier (low priority)
 def main():
+    """launch a gui for dice.py"""
     layout = [
         [
             # TODO disable typing in output box
+            # TODO pad output text
             sg.Output(
                 size=(90, 25),
                 pad=(0, 5),
-                echo_stdout_stderr=True,
+                echo_stdout_stderr=False,
                 tooltip="Results of the dice rolled",
                 key="-OUTPUT-",
             )
@@ -55,6 +58,7 @@ def main():
         ],
     ]
 
+    sg.theme("BlueMono")
     window = sg.Window(
         "Dice",
         layout,
@@ -78,6 +82,7 @@ def main():
                     radio = "-DISADV-"
             else:
                 radio = None
+                # if sides or count is invalid set it to the default value
                 try:
                     sides = int(values["-SIDES-"])
                 except ValueError:
@@ -91,6 +96,7 @@ def main():
                 else:
                     sum_rolls = None
                 window["-OUTPUT-"].update(dice.roll_dice(sides, count, sum_rolls, True))
+            # uncheck the radio button if it was checked upon rolling
             if radio:
                 window.FindElement(radio).Update(False)
             window.Refresh()
