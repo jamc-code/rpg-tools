@@ -3,6 +3,7 @@ from random import randint
 from sys import argv
 
 
+# TODO uniform number formatting
 def advantage(adv: str):
     """roll with advantage/disadvantage (two s20 and choose higher/lower)"""
     rolls = [0]
@@ -10,12 +11,17 @@ def advantage(adv: str):
         rolls.append(randint(1, 20))
         rolls[0] += 1
     for roll in rolls[1:]:
-        print(f"You rolled a {roll} on a d20")
+        print(f"You rolled a {roll:02d} on a d20")
     if adv == "adv":
-        adv_message = f"With advantage, you rolled a {sorted(rolls)[2]}\n"
+        adv_message = f"With advantage, you rolled a {sorted(rolls)[2]:02d}\n"
     elif adv == "disadv":
-        adv_message = f"With disadvantage, you rolled a {sorted(rolls)[1]}\n"
+        adv_message = f"With disadvantage, you rolled a {sorted(rolls)[1]:02d}\n"
     print(adv_message)
+
+
+def assign_zeros(num: int, length: int):
+    """add leading zeros to an integer"""
+    return str(num).zfill(length)
 
 
 def choose_sides():
@@ -119,13 +125,17 @@ def parse_args():
         roll_dice(sides, count, total)
 
 
-def roll_dice(sides, repeat=None, total=None, gui=None):
+# TODO is there a cleaner way to add zeros to the front number?
+def roll_dice(sides: int, repeat=None, total=None, gui=None):
     """roll a dice with {sides} specified by input"""
     rolling = True
+    sides_len = len(str(sides))
     while rolling:
         if repeat is True:
-            print(f"You rolled a {randint(1, sides)} on a d{sides}")
-            reroll = input("Roll repeat? ").lower()
+            roll = randint(1, sides)
+            num_zeros = assign_zeros(roll, sides_len)
+            print(f"You rolled a {num_zeros} on a d{sides}")
+            reroll = input("Repeat roll? ").lower()
             if reroll == "y":
                 pass
             else:
@@ -135,7 +145,9 @@ def roll_dice(sides, repeat=None, total=None, gui=None):
             roll_sum = 0
             for i in range(1, repeat + 1):
                 roll = randint(1, sides)
-                print(f"You rolled a {roll} on a d{sides}")
+                num_zeros = assign_zeros(roll, sides_len)
+                print(f"You rolled a {num_zeros} on a d{sides}")
+                # print(f"You rolled a {r
                 # if total is passed, sum rolls
                 if total:
                     roll_sum += roll
@@ -152,7 +164,9 @@ def roll_dice(sides, repeat=None, total=None, gui=None):
                 print()
             break
         else:
-            print(f"You rolled a {randint(1, sides)} on a d{sides}")
+            roll = randint(1, sides)
+            num_zeros = assign_zeros(roll, sides_len)
+            print(f"You rolled a {num_zeros} on a d{sides}")
             break
 
 
