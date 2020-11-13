@@ -2,7 +2,8 @@ from pathlib import Path
 from random import choice
 import PySimpleGUI as sg
 import gen_person
-from lib.to_output import get_output_location
+from lib.to_output import get_output_location, to_output
+
 # TODO turn this into a function with args for any generator
 
 
@@ -19,29 +20,34 @@ def main():
             )
         ],
         [
-            # TODO age input box cuts off last letter of "Random"
             sg.Text("Age:"),
             sg.Combo(
-                (["Young", "Middle", "Old", "Random"]),
-                "Random",
+                values=(["Young", "Middle", "Old", "Random"]),
+                default_value="Random",
+                size=(8, 8),
+                auto_size_text=False,
                 key="-AGE-",
             ),
             sg.Text("Gender:"),
             sg.Combo(
-                (["Nonbinary", "Female", "Male", "Random"]),
-                "Random",
+                values=(["Nonbinary", "Female", "Male", "Random"]),
+                default_value="Random",
+                size=(8, 8),
+                auto_size_text=False,
                 key="-GENDER-",
             ),
-            # TODO move this to be a row under the args for more room
+        ],
+        [
             sg.Check(
-                "Output to file",
+                text="Output to file",
                 enable_events=True,
                 key="-WRITE-",
                 tooltip="write generated character to file",
             ),
             # TODO find a way to align this text to the right so it shows file location
+            # TODO maybe sub the '/home/user' for '~'
             sg.Input(
-                f"{get_output_location(config_location, 'GenPerson')}",
+                default_text=f"{get_output_location(config_location, 'GenPerson')}",
                 disabled=True,
                 key="-OUTPUT_LOC-",
                 tooltip="location of the output file, if enabled",
@@ -56,7 +62,7 @@ def main():
         layout,
         auto_size_text=True,
         auto_size_buttons=True,
-        size=(800, 400),
+        size=(600, 430),
         element_justification="center",
     )
 
@@ -84,6 +90,12 @@ def main():
             name, company, job, age = gen_person.gen_person(gender, age_group)
             person = gen_person.format_person(name, company, job, age, gender)
             print(person)
+            if values["-WRITE-"] is True:
+                # TODO manage what to do if the folder doesn't exist
+                #      maybe open a popup window asking if the user would like to create
+                #      the containing folder
+                to_output("GenPerson", f"{person}\n")
+    exit(0)
 
 
 p = Path(__file__).absolute()
