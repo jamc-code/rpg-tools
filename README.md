@@ -24,7 +24,7 @@ Currently, the generators are aimed at a sci-fi setting, but I plan on adding fa
 - [ ] Allow output location to be passed after '-o'
 - [ ] Town/location generator
   - [ ] Spacestation generator
-- [ ] GUI
+- [ ] GUIs
 - [ ] Create releases for people without python installed
 - [X] Better project structure
 - [X] Add info to pyproject

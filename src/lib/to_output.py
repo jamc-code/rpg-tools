@@ -6,8 +6,11 @@ from pathlib import Path
 import regex
 
 
-def create_option(config_file, option: str):
+def create_option(config_file: str, option: str, gui=None):
     """prompt for user to provide value for {option}"""
+    if gui:
+        print("GUI detected. Exiting.")
+        exit(5)
     output_file = input(f"Path to output file (base dir is {p.parents[2]}): ")
     if output_file[0:2] == "./":
         output_file = output_file.lstrip("./")
@@ -37,18 +40,22 @@ def get_latest_edit(filename: str):
         with open(filename, "r") as file:
             text = file.read()
     else:
-        return True
+        return
 
     # TODO group the second search for \d{2} to avoid repeating self
     # find the latest edit with regex, then remove dashes and make int
-    latest_edit = int(regex.findall("\d{4}-\d{2}-\d{2}", text)[-1].replace("-", ""))
+    try:
+        latest_edit = int(regex.findall("\d{4}-\d{2}-\d{2}", text)[-1].replace("-", ""))
+    except IndexError:
+        # if there is no timestamp (file is prob new), add one
+        latest_edit = 0
     current_date_int = int(datetime.now().strftime("%Y%m%d"))
     if current_date_int > latest_edit:
         return True
     return
 
 
-def get_output_location(config_file: str, option: str):
+def get_output_location(config_file: str, option: str, gui=None):
     """output to file and stdout using path set in config"""
     config = ConfigParser()
     config.read(config_file, "utf-8")
@@ -63,14 +70,16 @@ def get_output_location(config_file: str, option: str):
             output_file = output_file.lstrip("./")
             output_file = f"{p.parents[2]}/{output_file}"
     else:
-        output_file = create_option(config_file, option)
+        output_file = create_option(config_file, option, gui)
 
     return output_file
 
 
-def write_to_file(option: str, output_file: str, new_text: str, add_datestamp=False):
+def write_to_file(
+    option: str, output_file: str, new_text: str, add_datestamp=False, gui=None
+):
     """write string to specified output file"""
-    get_latest_edit(output_file)
+    # this while loop allows errors to be corrected
     while True:
         try:
             with open(output_file, "a") as file:
@@ -80,6 +89,11 @@ def write_to_file(option: str, output_file: str, new_text: str, add_datestamp=Fa
             return
 
         except FileNotFoundError:
+            # TODO return prompt to create popup windows to get input
+            #      and rerun the function with new info
+            if gui:
+                print("GUI detected. Exiting.")
+                exit(5)
             if name == "posix":
                 out_fp = output_file.split("/")[:-1]
                 out_fp = "/".join(out_fp)
@@ -87,8 +101,7 @@ def write_to_file(option: str, output_file: str, new_text: str, add_datestamp=Fa
                 if proceed == "y":
                     makedirs(out_fp)
                 else:
-                    output_file = create_option(config_location, option)
-                    pass
+                    output_file = create_option(config_location, option, gui)
             else:
                 out_fp = output_file.split("\\")[:-1]
                 out_fp = "\\".join(out_fp)
@@ -96,11 +109,10 @@ def write_to_file(option: str, output_file: str, new_text: str, add_datestamp=Fa
                 if proceed == "y":
                     makedirs(out_fp)
                 else:
-                    output_file = create_option(config_location, option)
-                    pass
+                    output_file = create_option(config_location, option, gui)
 
 
-def to_output(generator: str, new_text: str):
+def to_output(generator: str, new_text: str, gui=None):
     """find file and write to it"""
     try:
         output_file = get_output_location(config_location, generator)
