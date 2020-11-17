@@ -4,10 +4,10 @@ import PySimpleGUI as sg
 import gen_person
 from lib.to_output import get_output_location, to_output
 
-# TODO turn this into a function with args for any generator
+# TODO turn this into a class with methods for use with any generator
 
 
-def main():
+def main(output_location: str):
     """launch a gui for the person generator"""
     layout = [
         [
@@ -47,7 +47,7 @@ def main():
             # TODO find a way to align this text to the right so it shows file location
             # TODO maybe sub the '/home/user' for '~'
             sg.Input(
-                default_text=f"{get_output_location(config_location, 'GenPerson')}",
+                default_text=output_location,
                 disabled=True,
                 key="-OUTPUT_LOC-",
                 tooltip="location of the output file, if enabled",
@@ -74,8 +74,10 @@ def main():
         # enable the input box ONLY if the checkbox is checked
         if values["-WRITE-"] is True:
             window.FindElement("-OUTPUT_LOC-").Update(disabled=False)
+            output_location = None
         elif values["-WRITE-"] is False:
             window.FindElement("-OUTPUT_LOC-").Update(disabled=True)
+            output_location = None
         if event == "Generate!":
             age_list = ["young", "middle", "old"]
             age_group = values["-AGE-"].lower()
@@ -94,12 +96,17 @@ def main():
                 # TODO manage what to do if the folder doesn't exist
                 #      maybe open a popup window asking if the user would like to create
                 #      the containing folder
-                to_output("GenPerson", f"{person}\n")
+                to_output(generator="GenPerson", new_text=f"{person}\n", gui=True)
     exit(0)
 
 
 p = Path(__file__).absolute()
 config_location = f"{p.parents[1]}/config.ini"
+output_location = f"{get_output_location(config_location, 'GenPerson')}",
+print(str(config_location))
+print(output_location)
+short_location = config_location
+home_path = str(p.home())
 
 if __name__ == "__main__":
-    main()
+    main(output_location)

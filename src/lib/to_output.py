@@ -2,7 +2,7 @@
 from configparser import ConfigParser
 from datetime import datetime
 from os import makedirs, name
-from pathlib import Path
+from pathlib import Path, PosixPath
 import regex
 
 
@@ -73,6 +73,20 @@ def get_output_location(config_file: str, option: str, gui=None):
         output_file = create_option(config_file, option, gui)
 
     return output_file
+
+
+def home_dir_convert(filepath: (str, PosixPath), use: str):
+    """convert '/home/user' to '~' and vice versa (returns a string)"""
+    while True:
+        try:
+            if str(filepath)[0] == "~":
+                new_fp = str(PosixPath(filepath).expanduser())
+            elif str(filepath)[0:6] == "/home/":
+                new_fp = str(filepath).replace(str(p.home()), "~")
+            return new_fp
+        except UnboundLocalError:
+            print("Filepath must be a string starting with '~' or '/home/'")
+            filepath = input(f"Provide a filepath to {use}: ")
 
 
 def write_to_file(
