@@ -77,15 +77,23 @@ def get_output_location(config_file: str, option: str, gui=None):
 
 def home_dir_convert(filepath: (str, PosixPath), use: str):
     """convert '/home/user' to '~' and vice versa (returns a string)"""
+    # TODO test this
     while True:
         try:
             if str(filepath)[0] == "~":
                 new_fp = str(PosixPath(filepath).expanduser())
+                if PosixPath(new_fp).exists():
+                    pass
+                else:
+                    raise IOError("Filepath does not exist!\nProvide valid path.")
             elif str(filepath)[0:6] == "/home/":
-                new_fp = str(filepath).replace(str(p.home()), "~")
+                if PosixPath(filepath).exists():
+                    new_fp = str(filepath).replace(str(p.home()), "~")
+                else:
+                    raise IOError("Filepath does not exist!\nProvide valid path.")
             return new_fp
-        except UnboundLocalError:
-            print("Filepath must be a string starting with '~' or '/home/'")
+        except (IOError, UnboundLocalError):
+            print("Filepath must exist and be a string starting with '~' or '/home/'")
             filepath = input(f"Provide a filepath to {use}: ")
 
 
@@ -142,5 +150,15 @@ p = Path(__file__).absolute()
 config_location = f"{p.parents[2]}/config.ini"
 
 if __name__ == "__main__":
-    to_output("GenPerson", "NEW TEXT\n\n")
-    exit(0)
+    new_fp = home_dir_convert("/home/jam/programming", "config file")
+    print(new_fp)
+    new_fp = home_dir_convert("~/programming", "config file")
+    print(new_fp)
+    new_fp = home_dir_convert(2, "config file")
+    print(new_fp)
+    new_fp = home_dir_convert("/home/jam/thing", "config file")
+    print(new_fp)
+    new_fp = home_dir_convert("~/thing", "config file")
+    print(new_fp)
+    # to_output("GenPerson", "NEW TEXT\n\n")
+    # exit(0)
