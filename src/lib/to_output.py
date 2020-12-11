@@ -6,7 +6,7 @@ from pathlib import Path
 import regex
 
 
-def create_option(config_file, option: str):
+def create_option(config_file: str, option: str, gui=None) -> str:
     """prompt for user to provide value for {option}"""
     output_file = input(f"Path to output file (base dir is {p.parents[2]}): ")
     if output_file[0:2] == "./":
@@ -68,7 +68,31 @@ def get_output_location(config_file: str, option: str):
     return output_file
 
 
-def write_to_file(option: str, output_file: str, new_text: str, add_datestamp=False):
+def home_dir_convert(filepath: str, use: str) -> str:
+    """convert '/home/user' to '~' and vice versa (returns a string)"""
+    # TODO test this
+    while True:
+        try:
+            if str(filepath)[0] == "~":
+                new_fp = PosixPath(filepath).expanduser()
+                if PosixPath(new_fp).exists():
+                    pass
+                else:
+                    raise IOError("Filepath does not exist!\nProvide valid path.")
+            elif str(filepath)[0:6] == "/home/":
+                if PosixPath(filepath).exists():
+                    new_fp = filepath.replace(str(p.home()), "~")
+                else:
+                    raise IOError("Filepath does not exist!\nProvide valid path.")
+            return str(new_fp)
+        except (IOError, UnboundLocalError):
+            print("Filepath must exist and be a string starting with '~' or '/home/'")
+            filepath = input(f"Provide a filepath to {use}: ")
+
+
+def write_to_file(
+    option: str, output_file: str, new_text: str, add_datestamp=False, gui=None
+):
     """write string to specified output file"""
     get_latest_edit(output_file)
     while True:
@@ -85,7 +109,7 @@ def write_to_file(option: str, output_file: str, new_text: str, add_datestamp=Fa
                 out_fp = "/".join(out_fp)
                 proceed = input(f"Create '{out_fp}'? [Y/n] ").lower()
                 if proceed == "y":
-                    makedirs(out_fp)
+                    makedirs(str(out_fp))
                 else:
                     output_file = create_option(config_location, option)
                     pass
@@ -94,7 +118,7 @@ def write_to_file(option: str, output_file: str, new_text: str, add_datestamp=Fa
                 out_fp = "\\".join(out_fp)
                 proceed = input(f"Create '{out_fp}'? [Y/n] ").lower()
                 if proceed == "y":
-                    makedirs(out_fp)
+                    makedirs(str(out_fp))
                 else:
                     output_file = create_option(config_location, option)
                     pass
@@ -116,5 +140,15 @@ p = Path(__file__).absolute()
 config_location = f"{p.parents[2]}/config.ini"
 
 if __name__ == "__main__":
+    # new_fp = home_dir_convert("/home/jam/programming", "config file")
+    # print(new_fp)
+    # new_fp = home_dir_convert("~/programming", "config file")
+    # print(new_fp)
+    # new_fp = home_dir_convert(str(2), "config file")
+    # print(new_fp)
+    # new_fp = home_dir_convert("/home/jam/thing", "config file")
+    # print(new_fp)
+    # new_fp = home_dir_convert("~/thing", "config file")
+    # print(new_fp)
     to_output("GenPerson", "NEW TEXT\n\n")
     exit(0)

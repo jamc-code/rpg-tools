@@ -3,7 +3,7 @@
 from random import choice
 
 
-def give_ship_type(ship: str, civ_mil=None):
+def give_ship_type(ship: str, civ_mil=None) -> str:
     """choose classification for a ship based off of size and availability"""
     if not civ_mil:
         civ_mil = choice(["civilian", "military"])

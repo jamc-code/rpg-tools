@@ -12,10 +12,15 @@ def advantage(adv: str):
     for roll in rolls[1:]:
         print(f"You rolled a {roll} on a d20")
     if adv == "adv":
-        print("With advantage, you rolled a", sorted(rolls)[2])
+        adv_message = f"With advantage, you rolled a {sorted(rolls)[2]:02d}\n"
     elif adv == "disadv":
-        print("With disadvantage, you rolled a", sorted(rolls)[1])
-    exit(0)
+        adv_message = f"With disadvantage, you rolled a {sorted(rolls)[1]:02d}\n"
+    print(adv_message)
+
+
+def assign_zeros(num: int, length: int) -> str:
+    """add leading zeros to an integer"""
+    return str(num).zfill(length)
 
 
 def choose_sides():
@@ -27,6 +32,7 @@ def choose_sides():
             return sides
         except (TypeError, ValueError):
             print("Positive integers only please!")
+            assert False
             exit(1)
 
 
@@ -137,7 +143,8 @@ def roll_dice(sides, again=None, total=None):
             roll_sum = 0
             for i in range(1, again + 1):
                 roll = randint(1, sides)
-                print(f"You rolled a {roll} on a d{sides}")
+                num_zeros = assign_zeros(roll, sides_len)
+                print(f"You rolled a {num_zeros} on a d{sides}")
                 # if total is passed, sum rolls
                 if total:
                     roll_sum += roll

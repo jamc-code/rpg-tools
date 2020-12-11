@@ -4,14 +4,16 @@
 
 import argparse
 from random import choice, randint
+from typing import Optional, Tuple, Union
 from faker import Faker
 from faker_starship import Provider as StarshipProvider
 from lib.ship_type import give_ship_type
 from lib.to_output import to_output
 
 
-def gen_names(size: str):
+def gen_names(size: str) -> Union[list, str]:
     """decide if ship gets a pilot or a captain and first mate"""
+    assistant: Optional[str] = None
     if size == "medium":
         pilot = "Pilot"
         assistant = "Co-Pilot"
@@ -20,10 +22,8 @@ def gen_names(size: str):
         assistant = "First Mate"
     else:
         pilot = "Pilot"
-        if randint(1, 4) > 3:  # 25% chance for a cop-pilot in a small ship
+        if randint(1, 4) > 3:  # 25% chance for a co-pilot in a small ship
             assistant = "Co-Pilot"
-        else:
-            assistant = None
 
     if assistant:
         crew = f"""\r
@@ -35,7 +35,7 @@ def gen_names(size: str):
     return crew
 
 
-def gen_starship(size: str, availability=None):
+def gen_starship(size: str, availability=None) -> str:
     """generate a starship name, class and registry"""
     # TODO redo existing ship classes to match typing when lore is more fleshed out
     # print(f"- Class: {fake.starship_class()}")
@@ -55,7 +55,7 @@ def gen_starship(size: str, availability=None):
     return ship
 
 
-def parse_arguments():
+def parse_arguments() -> Tuple[str, Optional[str], bool]:
     """sort through provided arguments"""
     parser = argparse.ArgumentParser()
     civ_mil_group = parser.add_mutually_exclusive_group()
@@ -102,17 +102,16 @@ def parse_arguments():
     else:
         size = choice(["small", "medium", "large"])
 
+    availability: Optional[str] = None
     if args.civ:
         availability = "civilian"
     elif args.mil:
         availability = "military"
-    else:
-        availability = None
 
     if args.output:
         output = True
     else:
-        output = None
+        output = False
 
     return size, availability, output
 
