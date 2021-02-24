@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # give ship typing (fighter, bomber, speeder, etc.)
+from __future__ import annotations
 from random import choice
 
 
 def give_ship_type(ship: str, civ_mil=None) -> str:
     """choose classification for a ship based off of size and availability"""
     if not civ_mil:
-        civ_mil = choice(["civilian", "military"])
+        civ_mil: str = choice(["civilian", "military"])
 
     # accesses dict by name of {ship} with key of {civ_mil}
     return choice(globals()[ship][civ_mil])
@@ -14,13 +15,13 @@ def give_ship_type(ship: str, civ_mil=None) -> str:
 
 def main():
     """ask specifications of ship and classify ship"""
-    ship = input("small, medium, large: ")
-    civ_mil = input("civ or mil: ")
-    classification = give_ship_type(ship, civ_mil)
+    ship: str = input("small, medium, large: ")
+    civ_mil: str = input("civ or mil: ")
+    classification: str = give_ship_type(ship, civ_mil)
     print(classification)
 
 
-small = {
+small: dict[str, list[str]] = {
     "civilian": [
         "Courier",
         "Smuggler",
@@ -32,12 +33,12 @@ small = {
     "military": ["Bomber", "Cutter", "Fast Attack Craft", "Gun Boat", "Patrol Boat"],
 }
 
-medium = {
+medium: dict[str, list[str]] = {
     "civilian": ["Cargo Ship", "Passenger Liner", "Repair Ship"],
     "military": ["Corvette", "Destroyer", "Frigate", "Light Cruiser"],
 }
 
-large = {
+large: dict[str, list[str]] = {
     "civilian": ["Colony Ship", "Cruise Ship", "Freighter"],
     "military": [
         "Battleship",

@@ -2,17 +2,17 @@
 from configparser import ConfigParser
 from datetime import datetime
 from os import makedirs, name
-from pathlib import Path
+from pathlib import Path, PosixPath
 import regex
 
 
 def create_option(config_file: str, option: str, gui=None) -> str:
     """prompt for user to provide value for {option}"""
-    output_file = input(f"Path to output file (base dir is {p.parents[2]}): ")
+    output_file: str = input(f"Path to output file (base dir is {p.parents[2]}): ")
     if output_file[0:2] == "./":
         output_file = output_file.lstrip("./")
         output_file = f"{p.parents[2]}/{output_file}"
-    save = input("Save as default location? [Y/n] ").lower()
+    save: str = input("Save as default location? [Y/n] ").lower()
     if save == "y":
         config = ConfigParser()
         config.read(config_file, "utf-8")
@@ -32,16 +32,18 @@ def create_option(config_file: str, option: str, gui=None) -> str:
 
 def get_latest_edit(filename: str):
     """find latest edit in file and append new data"""
-    filepath = Path(filename)
+    filepath: PosixPath = Path(filename)
     if filepath.is_file() and filepath.stat().st_size > 0:
         with open(filename, "r") as file:
-            text = file.read()
+            text: str = file.read()
     else:
         return True
 
     # TODO group the second search for \d{2} to avoid repeating self
     # find the latest edit with regex, then remove dashes and make int
-    latest_edit = int(regex.findall("\d{4}-\d{2}-\d{2}", text)[-1].replace("-", ""))
+    latest_edit: int = int(
+        regex.findall("\d{4}-\d{2}-\d{2}", text)[-1].replace("-", "")
+    )
     current_date_int = int(datetime.now().strftime("%Y%m%d"))
     if current_date_int > latest_edit:
         return True

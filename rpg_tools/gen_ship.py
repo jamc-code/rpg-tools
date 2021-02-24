@@ -1,19 +1,20 @@
+""":"""
 # generate a random starship name with a pilot/captain (dependant on size)
 # ship classifications partially sourced from
 # http://www.milsf.com/ship-classifications/
 
+from __future__ import annotations
 import argparse
 from random import choice, randint
-from typing import Optional, Tuple, Union
 from faker import Faker
 from faker_starship import Provider as StarshipProvider
 from lib.ship_type import give_ship_type
 from lib.to_output import to_output
 
 
-def gen_names(size: str) -> Union[list, str]:
+def gen_names(size: str) -> list | str:
     """decide if ship gets a pilot or a captain and first mate"""
-    assistant: Optional[str] = None
+    assistant: str | None = None
     if size == "medium":
         pilot = "Pilot"
         assistant = "Co-Pilot"
@@ -55,7 +56,7 @@ def gen_starship(size: str, availability=None) -> str:
     return ship
 
 
-def parse_arguments() -> Tuple[str, Optional[str], bool]:
+def parse_arguments() -> tuple[str, str | None, bool]:
     """sort through provided arguments"""
     parser = argparse.ArgumentParser()
     civ_mil_group = parser.add_mutually_exclusive_group()
@@ -93,6 +94,7 @@ def parse_arguments() -> Tuple[str, Optional[str], bool]:
     )
     args = parser.parse_args()
 
+    size: str
     if args.small:
         size = "small"
     elif args.medium:
@@ -102,16 +104,14 @@ def parse_arguments() -> Tuple[str, Optional[str], bool]:
     else:
         size = choice(["small", "medium", "large"])
 
-    availability: Optional[str] = None
+    availability: str | None = None
     if args.civ:
         availability = "civilian"
     elif args.mil:
         availability = "military"
 
-    if args.output:
-        output = True
-    else:
-        output = False
+    output: bool
+    output = bool(args.output)
 
     return size, availability, output
 
@@ -119,7 +119,8 @@ def parse_arguments() -> Tuple[str, Optional[str], bool]:
 def main():
     """generate starship based off of argument given"""
     size, availability, output = parse_arguments()
-    ship = gen_starship(size, availability)
+    ship: str = gen_starship(size, availability)
+    print(type(ship))
     if output:
         to_output("GenShip", f"{ship}\n")
 

@@ -1,11 +1,13 @@
+"""roll a dice"""
+from __future__ import annotations
 import argparse
 from random import randint
-from sys import argv
+import sys
 
 
 def advantage(adv: str):
     """roll with advantage/disadvantage (two s20 and choose higher/lower)"""
-    rolls = [0]
+    rolls: list = [0]
     while rolls[0] < 2:
         rolls.append(randint(1, 20))
         rolls[0] += 1
@@ -25,35 +27,35 @@ def assign_zeros(num: int, length: int) -> str:
 
 def choose_sides():
     """choose the amount of sides on the die you want to roll"""
-    choosing = True
+    choosing: bool = True
     while choosing:
         try:
-            sides = int(input("What sided die would you like to roll? "))
+            sides: int = int(input("What sided die would you like to roll? "))
             return sides
         except (TypeError, ValueError):
             print("Positive integers only please!")
             assert False
-            exit(1)
+            sys.exit(1)
 
 
 def interactive(starting=None):
     """interactively roll dice"""
-    started = False
+    started: bool = False
     while True:
         if starting and started is False:
-            sides = starting
+            sides: int = starting
         else:
-            sides = choose_sides()
+            sides: int = choose_sides()
         # this prevents choose_dice from being repeated
         started = True
         while True:
             roll_dice(sides, again=True)
             break
-        cont = input("Continue with different die? ").lower()
+        cont: str = input("Continue with different die? ").lower()
         if cont == "y":
-            continue
+            pass
         else:
-            exit(0)
+            sys.exit(0)
 
 
 # TODO option to sum x highest/lowest rolls
@@ -103,6 +105,9 @@ def parse_args():
 
     args = parser.parse_args()
 
+    sides: int
+    count: int | None
+    total: bool | None
     if args.advantage:
         advantage("adv")
     elif args.disadvantage:
@@ -128,11 +133,11 @@ def parse_args():
 
 def roll_dice(sides, again=None, total=None):
     """roll a dice with {sides} specified by input"""
-    rolling = True
+    rolling: bool = True
     while rolling:
         if again is True:
             print(f"You rolled a {randint(1, sides)} on a d{sides}")
-            reroll = input("Roll again? ").lower()
+            reroll: str = input("Roll again? ").lower()
             if reroll == "y":
                 pass
             else:
@@ -140,10 +145,10 @@ def roll_dice(sides, again=None, total=None):
 
         # roll set number of times
         elif isinstance(again, int):
-            roll_sum = 0
-            for i in range(1, again + 1):
-                roll = randint(1, sides)
-                num_zeros = assign_zeros(roll, sides_len)
+            roll_sum: int = 0
+            for _ in range(1, again + 1):
+                roll: int = randint(1, sides)
+                num_zeros: str = assign_zeros(roll, sides)
                 print(f"You rolled a {num_zeros} on a d{sides}")
                 # if total is passed, sum rolls
                 if total:
@@ -167,14 +172,14 @@ def main():
     # we're using argv here to negate the need for a whole parser
     # just in case the user wants to enter interactive mode
     try:
-        if not len(argv) > 1:
+        if len(sys.argv) <= 1:
             interactive()
         else:
             parse_args()
     except KeyboardInterrupt:
         print("\nCtrl-C entered. Exiting.")
 
-    exit(0)
+    sys.exit(0)
 
 
 if __name__ == "__main__":
