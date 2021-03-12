@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import dice
+from .dice import roll_dice
 
 
 def main():
@@ -61,12 +61,12 @@ def main():
 
     while True:
         event, values = window.read()
-        if event == sg.WIN_CLOSED or event == "Exit":
+        if event in (sg.WINDOW_CLOSED, "Exit"):
             break
         if event == "Roll!":
             sides = int(values["-SIDES-"])
             count = int(values["-COUNT-"])
-            window["-OUTPUT-"].update(dice.roll_dice(sides, count))
+            window["-OUTPUT-"].update(roll_dice(sides, count))
             window.Refresh()
 
     window.close()
