@@ -1,4 +1,4 @@
-*.bak
-.idea
+.vim/
+poetry.lock
 *__pycache__*
 outs

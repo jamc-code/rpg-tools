@@ -4,7 +4,6 @@ import argparse
 
 def get_arguments() -> argparse.Namespace:
     """get arguments for the dice"""
-    # TODO option for total rolls
     # TODO option for repeating rolls
     # TODO interactive mode?
     parser = argparse.ArgumentParser()
@@ -23,6 +22,7 @@ def get_arguments() -> argparse.Namespace:
     main_args.add_argument(
         "-c", "--count", help="number of times to roll a dice", type=int
     )
+    main_args.add_argument("-t", "--total", help="sum all rolls", action="store_true")
 
     args: argparse.Namespace = parser.parse_args()
     return args
