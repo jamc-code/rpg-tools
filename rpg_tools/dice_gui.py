@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from .dice import roll_dice
+from dice import roll_dice
 
 
 def main():
