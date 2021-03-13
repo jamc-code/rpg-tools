@@ -1,6 +1,5 @@
 """roll a dice"""
 from __future__ import annotations
-import sys
 from random import randint
 
 # TODO fix this stupid import shit (more modules?)
@@ -13,10 +12,10 @@ def advantage(type_: str, times=None):
     type_: 'adv' for advantage, 'dis' for disadvantage
     """
     rolls: list[int] = []
-    while len(rolls) < 2:
+    for _ in range(2):
         roll = roll_dice(20)
         rolls.append(roll)
-    roll_msg: str = f"With {type_}, you rolled a {max(rolls):02} on a d20"
+    roll_msg: str = f"With {type_}, you rolled {max(rolls):02} on a d20"
     print(roll_msg)
     if not times:
         return
@@ -36,7 +35,7 @@ def roll_dice(sides: int, times=None, total=None) -> int:
     """roll a dice with {sides} a certain number of {times}"""
     padding: int = len(str(sides))  # get the amount of zeros to pad the roll with
     roll = get_roll(sides)
-    print(f"You rolled a {roll:0{padding}} on a d{sides}")
+    print(f"You rolled {roll:0{padding}} on a d{sides}")
     if not times:
         return roll
 
